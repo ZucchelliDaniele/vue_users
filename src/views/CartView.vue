@@ -60,7 +60,8 @@
 </style>
 
 <script>
-  // v-for="item in prodotti" :key="item.id"
+  // v-for="item in prodotti" :key="item.productCode"
+  // import prodotti from "../prodotti.js"
   export default {
     data () {
       return {
@@ -69,36 +70,10 @@
       }
     },
   methods: {
-    getProdotti() {
-      fetch('https://fakestoreapi.com/products')
-        .then((res) => res.json())
-        .then((json) => {
-          var selected_values = []
-          var selected_ids = []
-          if(localStorage.length != 0) {
-            selected_ids = JSON.parse(localStorage.getItem("this.selected"));
-            for (var i=0; i<selected_ids.length; i++) {
-              var this_id = selected_ids[i].id
-              var exists = false
-              for(var j=0; j<selected_ids.length; j++) {
-                if(this_id == selected_ids[j].id && i != j) {
-                  exists = true
-                }
-              }
-              if(!exists) {
-                selected_values.push(selected_ids[i])
-              }
-            }
-            json = selected_values
-          }
-          json = sortById(json)
-          this.items = json
-        })
-    },
     buy_selected() {
       var price = 0
       for(var i=0; i<this.selected.length; i++) {
-        price += this.selected[i].price
+        price += this.selected[i].buyPrice
       }
       if(this.selected.length != 0) {
         removeStocks(this.selected)
@@ -111,21 +86,45 @@
     },
     buy_all() {
       var price = 0
+      console.log(this.items.length)
       for(var i=0; i<this.items.length; i++) {
-        price += this.items[i].price
+        price += this.items[i].buyPrice
       }
-      if(JSON.parse(localStorage.getItem("this.selected")).length > 0) {
-        removeStocks(JSON.parse(localStorage.getItem("this.selected")))
-        alert("You bought "+this.items.length+" products for "+price+"€")
-        console.log(price)
-        let currentURL = document.location.href;
-        let updatedURL = currentURL.replace("cart", "");
-        window.location.href = updatedURL+"products";
+      if(localStorage.getItem("this.selected")!= null) {
+        if(JSON.parse(localStorage.getItem("this.selected")).length > 0) {
+          removeStocks(JSON.parse(localStorage.getItem("this.selected")))
+          alert("You bought "+this.items.length+" products for "+price+"€")
+          console.log(price)
+          let currentURL = document.location.href;
+          let updatedURL = currentURL.replace("cart", "");
+          window.location.href = updatedURL+"products";
+        }
       }
     }
   },
   mounted() {
-    this.getProdotti();
+    var json = []
+    var selected_values = []
+          var selected_ids = []
+          if(JSON.parse(localStorage.getItem("this.selected")) != null) {
+            selected_ids = JSON.parse(localStorage.getItem("this.selected"));
+            for (var i=0; i<selected_ids.length; i++) {
+              var this_id = selected_ids[i].productCode
+              console.log("ID:",this_id)
+              var exists = false
+              for(var j=0; j<selected_values.length; j++) {
+                if(this_id == selected_values[j].productCode) {
+                  exists = true
+                }
+              }
+              if(!exists) {
+                selected_values.push(selected_ids[i])
+              }
+            }
+            json = selected_values
+          }
+          json = sortById(json)
+          this.items = json
   },
   reserve() {
     this.loading = true
@@ -133,24 +132,15 @@
   }
   }
 function sortById(arr) {
-  return arr.sort((a, b) => a.id - b.id);
+  return arr.sort((a, b) => a.productCode - b.productCode);
 }
 function removeStocks(selected) {
-  var all = JSON.parse(localStorage.getItem("stocked_values"));
   var selected_ids = JSON.parse(localStorage.getItem("this.selected"));
   var remained = []
-  for(var i=0; i<selected.length; i++) {
-    for(var j=0; j<all.length; j++) {
-      if(( (selected[i].id) -1 )  == j) {
-        all[j] = all[j] - 1
-        console.log(all[j])
-      }
-    }
-  }
-  for(i=0; i<selected_ids.length; i++) {
+  for(var i=0; i<selected_ids.length; i++) {
     var exists = false
-    for(j=0; j<selected.length; j++) {
-      if(selected_ids[i].id == selected[j].id) {
+    for(var j=0; j<selected.length; j++) {
+      if(selected_ids[i].productCode == selected[j].productCode) {
         exists = true
       }
     }
@@ -159,7 +149,6 @@ function removeStocks(selected) {
     }
   }
   console.log(remained)
-  localStorage.setItem("stocked_values", JSON.stringify(all))
   localStorage.setItem("this.selected", JSON.stringify(remained))
 }
 </script>

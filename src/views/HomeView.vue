@@ -1,86 +1,66 @@
 <template>
-  <v-card flat>
-    <div class="table">
-    <v-card-title class="d-flex align-center pe-2">
-      Bella bro
-    </v-card-title>
-    </div>
-  </v-card>
+  <v-sheet class="pa-12" rounded>
+    <v-card class="mx-auto px-6 py-8" max-width="344">
+      <v-form
+        v-model="form"
+        @submit.prevent="onSubmit"
+      >
+        <v-text-field
+          v-model="email"
+          :readonly="loading"
+          :rules="[required]"
+          class="mb-2"
+          clearable
+          label="Email"
+        ></v-text-field>
+
+        <v-text-field
+          v-model="password"
+          :readonly="loading"
+          :rules="[required]"
+          clearable
+          label="Password"
+          placeholder="Enter your password"
+        ></v-text-field>
+
+        <br>
+
+        <v-btn
+          :disabled="!form"
+          :loading="loading"
+          block
+          color="success"
+          size="large"
+          type="submit"
+          variant="elevated"
+        >
+          Sign In
+        </v-btn>
+      </v-form>
+    </v-card>
+  </v-sheet>
 </template>
 
-<style>
-.table {
-  width: 60%;
-  margin: auto;
-}
-</style>
-
 <script>
-  // v-for="item in prodotti" :key="item.id"
   export default {
-    data () {
-      return {
-        items: [],
-        selected: []
-      }
+    data: () => ({
+      form: false,
+      email: null,
+      password: null,
+      loading: false,
+    }),
+
+    methods: {
+      onSubmit () {
+        if (!this.form) return
+
+        this.loading = true
+
+        setTimeout(() => (this.loading = false), 2000)
+      },
+      required (v) {
+        return !!v || 'Field is required'
+      },
     },
-  methods: {
-    getProdotti() {
-      fetch('https://fakestoreapi.com/products')
-        .then((res) => res.json())
-        .then((json) => {
-          var stocked_values = []
-          for(var i=0; i<json.length; i++) {
-            json[i].stock = Math.floor(Math.random() * 100)
-            if(json[i].stock < 0) {
-              json[i].stock = 0
-            }
-            stocked_values.push(json[i].stock)
-          }
-          if(JSON.parse(localStorage.getItem("stocked_values"))!= null) {
-            stocked_values = JSON.parse(localStorage.getItem("stocked_values"));
-            for(i=0; i<json.length; i++) {
-              json[i].stock = stocked_values[i]
-            }
-          }
-          else {
-            localStorage.setItem("stocked_values", JSON.stringify(stocked_values))
-          }
-          this.items = json
-        })
-    },
-    print_selected() {
-      var ids = []
-      if(JSON.parse(localStorage.getItem("this.selected")) != null) {
-        var selected_ids = JSON.parse(localStorage.getItem("this.selected"));
-        for (i=0; i<selected_ids.length; i++) {
-          ids.push(selected_ids[i])
-        }
-      }
-      for(var i=0; i<this.selected.length; i++) {
-        var exists = false
-        for(var j=0; j<ids.length; j++) {
-          if((this.selected[i].id == ids[j].id)) {
-            exists = true
-          }
-        }
-        if(this.selected[i].stock <= 0) {
-          exists = true
-        }
-        if(!exists) {
-          ids.push(this.selected[i])
-        }
-      }
-      localStorage.setItem("this.selected", JSON.stringify(ids))
-      document.location.href = document.location.href+"cart"
-    }
-  },
-  mounted() {
-    this.getProdotti()
-  },
-  reserve() {
-    this.loading = true
-    setTimeout(() => (this.loading = false), 2000)
-  }
   }
 </script>

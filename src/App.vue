@@ -1,35 +1,75 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/products">Products</router-link> |
-    <router-link to="/users">Users</router-link> |
-    <router-link to="/about">About</router-link>
-    <!-- <v-card
-    rounded="2"
-  >
-    <v-toolbar density="compact" height="100px">
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
-      <div class="title"><v-text-field clearable label="Label"></v-text-field></div>
-
+  <v-app>
+    <v-app-bar app color="dark darken-2">
+      <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
+      <v-toolbar-title class="white--text">Zucchelli Shop</v-toolbar-title>
       <v-spacer></v-spacer>
+     
+    </v-app-bar>
 
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+    <v-navigation-drawer app v-model="drawer" temporary>
+      <v-list>
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.text }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
+    <v-main>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
 
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
-    </v-toolbar>
-  </v-card> -->
-  </nav>
-  <router-view/>
+    <v-footer class="bg-grey-lighten-1">
+    <v-row justify="center" no-gutters>
+      
+      <v-col class="text-center mt-4" cols="12">
+        {{ new Date().getFullYear() }} — <strong>Zucchelli Shop - Website for School</strong>
+      </v-col>
+    </v-row>
+  </v-footer>
+
+  </v-app>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      drawer: false,
+      items: [
+        { text: 'Login', icon: 'mdi-login', to: '/' },
+        { text: 'Register', icon: 'mdi-account-plus', to: '/register' },
+        { text: 'About', icon: 'mdi-information', to: '/about' },
+        { text: 'Shop', icon: 'mdi-store', to: '/products' },
+        { text: 'Cart', icon: 'mdi-cart', to: '/cart' },
+        { text: 'Users', icon: 'mdi-account-supervisor', to: '/users' },
+        { text: 'Employees', icon: 'mdi-security', to: '/employees' },
+      ],
+    };
+  },
+  methods: {
+    toggleDrawer() {
+      this.drawer = !this.drawer;
+    },
+  },
+};
+</script>
+
+<style>
+@media (max-width: 600px) {
+  .v-navigation-drawer {
+    width: 200px;
+  }
+}
+
+</style>
 
 <style>
 #app {
@@ -42,10 +82,6 @@
 
 nav {
   padding: 30px;
-}
-
-.title {
-  width: 100%;
 }
 
 nav a {

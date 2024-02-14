@@ -43,17 +43,14 @@
       return {
         search: '',
         headers: [
-          {key: "contactFirstName", title:"Nome"},
-          {key: "contactLastName", title:"Cognome"},
-          {key: "country", title:"Nazione"},
-          {key: "city", title:"Città"},
-          {key: "creditLimit", title:"Limite Carta"},
+          {key: "firstName", title:"Nome"},
+          {key: "lastName", title:"Cognome"},
+          {key: "officeCode", title:"Numero ufficio"},
+          {key: "jobTitle", title:"Lavoro"},
+          {key: "employeeNumber", title:"Numero dipendente"},
           {key: "email", title:"Email"},
-          {key: "phone", title:"Cellulare"},
-          {key: "postalCode", title:"Codice Postale"},
-          {key: "customerNumber", title:"Codice"},
-          
-      
+          {key: "extension", title:"Estensione"},
+          {key: "reportsTo", title:"Riporta a"}
       ],
         items: [],
         selected: []
@@ -62,7 +59,7 @@
   methods: 
     {
     getUsers() {
-        fetch("http://localhost:3000/customers")
+        fetch("http://localhost:3000/employees/")
           .then((res) => res.json())
           .then((data) => {
             this.items = data
