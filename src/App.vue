@@ -44,7 +44,7 @@ export default {
     return {
       drawer: false,
       items: [
-        { text: 'Login', icon: 'mdi-login', to: '/' },
+        { text: 'Login', icon: 'mdi-login', to: '/login' },
         { text: 'Register', icon: 'mdi-account-plus', to: '/register' },
         { text: 'About', icon: 'mdi-information', to: '/about' },
         { text: 'Shop', icon: 'mdi-store', to: '/products' },

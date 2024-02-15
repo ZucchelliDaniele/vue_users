@@ -1,6 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import VueCryptojs from 'vue-cryptojs';
+import Vuex from 'vuex';
+import store from './store';
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
@@ -12,4 +15,4 @@ const vuetify = createVuetify({
     directives,
   })
 
-createApp(App).use(vuetify).use(router).mount('#app')
+createApp(App).use(vuetify).use(router).use(Vuex).use(VueCryptojs).use(store).mount('#app')
