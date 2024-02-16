@@ -3,7 +3,7 @@
     <v-card class="mx-auto px-6 py-8" max-width="344">
       <v-form
         v-model="form"
-        @submit.prevent="onSubmit"
+        @submit.prevent="login"
       >
         <v-text-field
           v-model="email"
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
   export default {
     data: () => ({
       form: false,
@@ -52,14 +53,34 @@
     }),
 
     methods: {
-      onSubmit () {
-        console.log(this.email)
-        if (!this.form) return
+      ...mapMutations(["setUser", "setToken"]),
+        async login(e) {
+          if (!this.form) return
 
         this.loading = true
 
         setTimeout(() => (this.loading = false), 2000)
-      },
+          e.preventDefault();
+          const salt = 'paleocapa';
+          const mail = this.email
+          let pwd = this.password
+          const hashedPwd = this.$CryptoJS.SHA256(pwd + salt).toString();
+          console.log(hashedPwd)
+          const response = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: mail,
+              password: hashedPwd
+            }),
+          });
+          const { user, token } = await response.json();
+          this.setUser(user);
+          this.setToken(token);
+          this.$router.push("/about");
+        },
       required (v) {
         return !!v || 'Field is required'
       },

@@ -5,6 +5,7 @@ const swaggerUi = require('swagger-ui-express')
 const swaggerDocument = require('./swagger.json')
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
+require('dotenv').config()
 
 const app = express();
 const port = 3000;
@@ -39,7 +40,7 @@ app.post('/login', (req, res) => {
   console.log(email)
   console.log(password)
 
-  db.query('SELECT * FROM employees WHERE email = ?', [email], (error, results) => {
+  db.query('SELECT * FROM customers WHERE email = ?', [email], (error, results) => {
     if(error) {
       return res.status(500).json({ error: 'Internal server error' });
     }
@@ -53,8 +54,7 @@ app.post('/login', (req, res) => {
     if(password !== user.pwd) {
       return res.status(401).json({ error: 'Invalid email or password' })
     }
-
-    const token = jwt.sign( { userId: user.employeeNumber, name: user.lastName }, process.env.JWT_KEY );
+    const token = jwt.sign( { userId: user.employeeNumber, name: user.lastName }, process.env.JWT_KEY )
     res.json({ user, token });
 
   });
