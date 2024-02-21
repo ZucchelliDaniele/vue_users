@@ -54,8 +54,70 @@ app.post('/login', (req, res) => {
     if(password !== user.pwd) {
       return res.status(401).json({ error: 'Invalid email or password' })
     }
-    const token = jwt.sign( { userId: user.employeeNumber, name: user.lastName }, process.env.JWT_KEY )
+    const token = jwt.sign( { userId: user.customerNumber, name: user.contactLastName }, process.env.JWT_KEY )
     res.json({ user, token });
+
+  });
+
+});
+
+app.post('/register', (req, res) => {
+  console.log(req.body);
+  const { 
+    customerName,
+    contactLastName,
+    contactFirstName,
+    phone,
+    addressLine1,
+    addressLine2,
+    city,
+    state,
+    postalCode,
+    country,
+    salesRepEmployeeNumber,
+    creditLimit,
+    email,
+    password
+  } = req.body;
+
+  db.query('SELECT * FROM customers WHERE email = ?', [email], (error, results) => {
+    if(error) {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    if(results.length === 0) {
+      var customerNumber = Math.floor(Math.random() * 100000000) + 500
+      db.query(
+        `INSERT INTO customers (
+          customerNumber,
+          customerName, contactLastName, contactFirstName,
+          phone, addressLine1, addressLine2, city, state,
+          postalCode, country, salesRepEmployeeNumber,
+          creditLimit, email, pwd
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        [
+          customerNumber,
+          customerName, contactLastName, contactFirstName,
+          phone, addressLine1, addressLine2, city, state,
+          postalCode, country, salesRepEmployeeNumber,
+          creditLimit, email, password
+        ],
+        (err) => {
+          if (err) {
+            console.log(`Error in query: ${err}`);
+            res.status(500).send("Internal Server Error");
+            return;
+          }
+          else {
+            const token = jwt.sign( { userId: customerNumber, name: contactLastName }, process.env.JWT_KEY )
+            res.json({ customerName, token });
+          }
+          res.status(200);
+        }
+      );
+    }
+    else {
+      return res.status(401).json({ error: 'Email already in use' });
+    }
 
   });
 
