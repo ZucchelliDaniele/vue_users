@@ -39,6 +39,13 @@
 </template>
 
 <script>
+import store from './store'
+var isLogged = setInterval( ()=> {
+  if(store.getters.isLoggedIn) {
+    console.log("Logged")
+    clearInterval(isLogged)
+  }
+}, 200)
 export default {
   data() {
     return {

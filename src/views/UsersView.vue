@@ -43,6 +43,7 @@
       return {
         search: '',
         headers: [
+          {key: "customerName", title: "Customer"},
           {key: "contactFirstName", title:"Nome"},
           {key: "contactLastName", title:"Cognome"},
           {key: "country", title:"Nazione"},

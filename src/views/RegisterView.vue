@@ -114,6 +114,7 @@
         color="primary"
         label="Password"
         :rules="[required]"
+        type="password"
         placeholder="Enter your password"
         variant="underlined"
       ></v-text-field>
