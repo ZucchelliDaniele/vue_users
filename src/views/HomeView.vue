@@ -3,7 +3,7 @@
     <h1>Homepage</h1>
     <router-link v-if="!isLoggedIn" to="/login"><button>Login</button></router-link>
     <p v-if="isLoggedIn">{{ user.lastName }}</p>
-    <p v-if="isLoggedIn">{{ token }}</p>
+    <p v-if="isLoggedIn">Token: {{ token }}</p>
   </div>
 </template>
 

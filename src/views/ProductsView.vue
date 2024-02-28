@@ -87,13 +87,13 @@
                 <tr align="right">
                   <th>Stocked:</th>
 
-                  <td>$ {{ item.raw.quantityInStock }}</td>
+                  <td>{{ item.raw.quantityInStock }}</td>
                 </tr>
 
                 <tr align="right">
                   <th>MSRP:</th>
 
-                  <td>{{ item.raw.MSRP }}</td>
+                  <td>$ {{ item.raw.MSRP }}</td>
                 </tr>
 
                 <tr align="right">

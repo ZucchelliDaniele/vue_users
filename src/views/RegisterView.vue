@@ -210,7 +210,7 @@ import { mapMutations } from 'vuex';
                 salesRepEmployeeNumber: this.salesRepEmployeeNumber,
                 creditLimit: this.creditLimit,
                 email: this.email,
-                password: this.password
+                password: hashedPwd,
               }),
             });
             const { user, token } = await response.json();
